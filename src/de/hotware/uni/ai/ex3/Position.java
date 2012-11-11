@@ -16,6 +16,10 @@ public class Position {
 		return this.mType.toString();
 	}
 	
+	public String getInfo() {
+		return "(" + this.mX + "," + this.mY + ")" + "(Type: " + this.mType.toString() + ")"; 
+	}
+	
 	public static enum Type {
 		SOLID("#"),
 		EMPTY(" "),
@@ -28,6 +32,10 @@ public class Position {
 		}
 		
 		protected String mRepresentation;
+		
+		public boolean isEmpty() {
+			return this == EMPTY;
+		}
 		
 		@Override
 		public String toString() {

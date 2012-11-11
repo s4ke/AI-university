@@ -36,4 +36,6 @@ public interface QuadNode<T> {
 	public void setWest(QuadNode<T> pNode);
 	public QuadNode<T> getWest();
 	
+	public QuadNode<T>[] getNeighbours();
+	
 }

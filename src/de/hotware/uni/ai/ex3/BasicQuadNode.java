@@ -3,13 +3,12 @@ package de.hotware.uni.ai.ex3;
 public class BasicQuadNode<T> implements QuadNode<T> {
 	
 	protected T mValue;
-	protected QuadNode<T> mNorth;
-	protected QuadNode<T> mEast;
-	protected QuadNode<T> mSouth;
-	protected QuadNode<T> mWest;
+	protected QuadNode<T>[] mNeighbours;
 
+	@SuppressWarnings("unchecked")
 	public BasicQuadNode(T pValue) {
 		this.mValue = pValue;
+		this.mNeighbours = new QuadNode[4];
 	}
 
 	@Override
@@ -19,47 +18,52 @@ public class BasicQuadNode<T> implements QuadNode<T> {
 
 	@Override
 	public void setNorth(QuadNode<T> pNode) {
-		this.mNorth = pNode;
+		this.mNeighbours[0] = pNode;
 	}
 
 	@Override
 	public QuadNode<T> getNorth() {
-		return this.mNorth;
+		return this.mNeighbours[0];
 	}
 
 	@Override
 	public void setEast(QuadNode<T> pNode) {
-		this.mEast = pNode;
+		this.mNeighbours[1] = pNode;
 	}
 
 	@Override
 	public QuadNode<T> getEast() {
-		return this.mEast;
+		return this.mNeighbours[1];
 	}
 
 	@Override
 	public void setSouth(QuadNode<T> pNode) {
-		this.mSouth = pNode;
+		this.mNeighbours[2] = pNode;
 	}
 
 	@Override
 	public QuadNode<T> getSouth() {
-		return this.mSouth;
+		return this.mNeighbours[2];
 	}
 
 	@Override
 	public void setWest(QuadNode<T> pNode) {
-		this.mWest = pNode;
+		this.mNeighbours[3] = pNode;
 	}
 
 	@Override
 	public QuadNode<T> getWest() {
-		return this.mWest;
+		return this.mNeighbours[3];
 	}
 	
 	@Override
 	public String toString() {
 		return this.mValue.toString();
+	}
+
+	@Override
+	public QuadNode<T>[] getNeighbours() {
+		return this.mNeighbours;
 	}
 
 }
