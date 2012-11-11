@@ -44,7 +44,6 @@ public class DepthFirstSearch implements RouteFindingAlgorithm {
 			if(node != null && node.get().mType.isEmpty() && !pVisited.contains(node)) {
 				LinkedList<QuadNode<Position>> result = this.findRoute(node, pEnd, pVisitListener, pQuadNodeMatrix, pVisited);
 				if(result != null) {
-					// Path found
 					result.add(0, pCurrent);
 					return result;
 				}
