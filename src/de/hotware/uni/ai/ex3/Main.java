@@ -32,6 +32,7 @@ public class Main {
 		for(QuadNode<Position> node : pQueue) {
 			System.out.print(node.get().getInfo() + " -> ");
 		}
+		System.out.println("done.");
 	}
 
 }
