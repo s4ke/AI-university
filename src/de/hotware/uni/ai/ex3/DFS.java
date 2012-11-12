@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
-public class DepthFirstSearch implements RouteFindingAlgorithm {
+public class DFS implements RouteFindingAlgorithm {
 
 	@Override
 	public Queue<QuadNode<Position>> findRoute(QuadNode<Position> pStart,

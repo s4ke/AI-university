@@ -2,7 +2,6 @@ package de.hotware.uni.ai.ex3;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -19,14 +18,10 @@ public class AStar implements RouteFindingAlgorithm {
 			throw new IllegalArgumentException("pStart or pEnd were not empty");
 		}
 		Map<QuadNode<Position>, QuadNode<Position>> val = this.star(pStart, pEnd, pQuadNodeMatrix, pVisitListener);
-		LinkedList<QuadNode<Position>> ret = null;
+		Queue<QuadNode<Position>> ret = null;
 		if(val != null) {
 			//we found some stuff
-			QuadNode<Position> current = pEnd;
-			ret = new LinkedList<QuadNode<Position>>();
-			while((current = val.get(current)) != pStart) {
-				ret.add(0, current);
-			}
+			ret = Util.buildPath(val, pEnd);
 		}
 		return ret;
 	}
@@ -35,11 +30,11 @@ public class AStar implements RouteFindingAlgorithm {
 			QuadNode<Position> pEnd,
 			QuadNodeMatrix<Position> pQuadNodeMatrix,
 			VisitListener pVisitListener) {
-		PriorityQueue<NodeWrap> openSet = new PriorityQueue<NodeWrap>();
+		PriorityQueue<NodeWrap> openSet = new PriorityQueue<>();
 		openSet.add(new NodeWrap(pStart, 0, this.distance(pStart, pEnd)));
 		
-		Map<QuadNode<Position>, QuadNode<Position>> cameFrom = new HashMap<QuadNode<Position>, QuadNode<Position>>();
-		Set<NodeWrap> closedSet = new HashSet<NodeWrap>();
+		Map<QuadNode<Position>, QuadNode<Position>> cameFrom = new HashMap<>();
+		Set<NodeWrap> closedSet = new HashSet<>();
 		
 		while(!openSet.isEmpty()) {
 			//get the next best node out of the set
@@ -50,17 +45,18 @@ public class AStar implements RouteFindingAlgorithm {
 			if(current.mNode == pEnd) {
 				return cameFrom;
 			}
+			//we are finished with the current node
 			closedSet.add(current);
-			
 			//navigate through all neighbours
 			for(QuadNode<Position> neighbour : current.mNode.getNeighbours()) {
 				
 				//if the neighbour is null the maze ends, if the type isn't empty, there should be a wall
 				//if the neighbour is finished
-				if( neighbour == null || !neighbour.get().mType.isEmpty() || closedSet.contains(neighbour) ) {
+				if(neighbour == null || !neighbour.get().mType.isEmpty() || closedSet.contains(neighbour)) {
 					continue;
 				}
 				
+				//check whether we have already opened an old instance of this neighbour
 				NodeWrap oldNode = null;
 				for(NodeWrap node : openSet) {
 					if(node.mNode == neighbour) {
@@ -71,7 +67,9 @@ public class AStar implements RouteFindingAlgorithm {
 				
 				//create the new node, g(x) is always + 1 as we are only going north, east, south or west
 				//distance is our heuristic function
-				NodeWrap toAdd = new NodeWrap(neighbour, current.mGScore + 1, distance(current.mNode, neighbour));
+				NodeWrap toAdd = new NodeWrap(neighbour,
+						current.mGScore + 1,
+						distance(neighbour, pEnd));
 				
 				if(oldNode == null || toAdd.mGScore <= oldNode.mGScore) {
 					cameFrom.put(neighbour, current.mNode);

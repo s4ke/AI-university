@@ -22,13 +22,24 @@ public class Main {
 				
 		};
 		
+		System.out.println("------------------------------------");
+		System.out.println("testing with dfs: ");
 		QuadNodeMatrix<Position> matrix = MapParser.parseMap(new File("test.maze"));
-//		System.out.println(matrix);
-		RouteFindingAlgorithm algo = new DepthFirstSearch();
-//		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
+		System.out.println(matrix);
+		RouteFindingAlgorithm algo = new DFS();
+		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
 		
-		 matrix = MapParser.parseMap(new File("test.maze"));
-//		System.out.println(matrix);
+		System.out.println("------------------------------------");
+		System.out.println("Testing with greedy: ");
+		matrix = MapParser.parseMap(new File("test.maze"));
+		System.out.println(matrix);
+		algo = new Greedy();
+		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
+		
+		System.out.println("------------------------------------");
+		System.out.println("testing with A*: ");
+		matrix = MapParser.parseMap(new File("test.maze"));
+		System.out.println(matrix);
 		algo = new AStar();
 		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
 	}
