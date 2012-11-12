@@ -23,14 +23,21 @@ public class Main {
 		};
 		
 		QuadNodeMatrix<Position> matrix = MapParser.parseMap(new File("test.maze"));
-		System.out.println(matrix);
+//		System.out.println(matrix);
 		RouteFindingAlgorithm algo = new DepthFirstSearch();
+//		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
+		
+		 matrix = MapParser.parseMap(new File("test.maze"));
+//		System.out.println(matrix);
+		algo = new AStar();
 		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
 	}
 	
 	public static void printPath(Queue<QuadNode<Position>> pQueue) {
-		for(QuadNode<Position> node : pQueue) {
-			System.out.print(node.get().getInfo() + " -> ");
+		if(pQueue != null) {
+			for(QuadNode<Position> node : pQueue) {
+				System.out.print(node.get().getInfo() + " -> ");
+			}
 		}
 		System.out.println("done.");
 	}
