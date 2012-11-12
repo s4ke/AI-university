@@ -1,17 +1,17 @@
 package de.hotware.uni.ai.ex3.path;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapParser {
 	
-	public static QuadNodeMatrix<Position> parseMap(File pFile) throws FileNotFoundException, IOException {
-		try(BufferedReader buf = new BufferedReader(new FileReader(pFile))) {
+	public static QuadNodeMatrix<Position> parseMap(URL pURL) throws FileNotFoundException, IOException {
+		try(BufferedReader buf = new BufferedReader(new InputStreamReader(pURL.openConnection().getInputStream()))) {
 			int dimensionX = -1;
 			int dimensionY = 0;
 			

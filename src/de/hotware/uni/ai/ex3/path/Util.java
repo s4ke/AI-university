@@ -13,7 +13,6 @@ public class Util {
 		QuadNode<Position> current = pEnd;
 		ret = new LinkedList<QuadNode<Position>>();
 		while((current = pMap.get(current)) != null) {
-			System.out.println(current.get().getInfo());
 			ret.add(0, current);
 		}
 		return ret;

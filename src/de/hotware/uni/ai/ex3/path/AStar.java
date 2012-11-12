@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Comparator;
 
 public class AStar implements RouteFindingAlgorithm {
 
@@ -17,24 +18,21 @@ public class AStar implements RouteFindingAlgorithm {
 		if(!pStart.get().mType.isEmpty() || !pEnd.get().mType.isEmpty()) {
 			throw new IllegalArgumentException("pStart or pEnd were not empty");
 		}
-		Map<QuadNode<Position>, QuadNode<Position>> val = this.star(pStart, pEnd, pQuadNodeMatrix, pVisitListener);
-		Queue<QuadNode<Position>> ret = null;
-		if(val != null) {
-			//we found some stuff
-			ret = Util.buildPath(val, pEnd);
-		}
-		return ret;
-	}
-	
-	public Map<QuadNode<Position>, QuadNode<Position>> star(QuadNode<Position> pStart,
-			QuadNode<Position> pEnd,
-			QuadNodeMatrix<Position> pQuadNodeMatrix,
-			VisitListener pVisitListener) {
-		PriorityQueue<NodeWrap> openSet = new PriorityQueue<>();
+		PriorityQueue<NodeWrap> openSet = new PriorityQueue<NodeWrap>(1, new Comparator<NodeWrap>() {
+			
+			@Override
+			public int compare(NodeWrap pFirst, NodeWrap pSecond) {
+				double first = pFirst.mGScore + pSecond.mHScore;
+				double second = pSecond.mGScore + pSecond.mHScore;
+				return (int) ((first - second) * 1000);
+			}
+			
+		});
+		
 		openSet.add(new NodeWrap(pStart, 0, this.distance(pStart, pEnd)));
 		
 		Map<QuadNode<Position>, QuadNode<Position>> cameFrom = new HashMap<>();
-		Set<NodeWrap> closedSet = new HashSet<>();
+		Set<QuadNode<Position>> closedSet = new HashSet<>();
 		
 		while(!openSet.isEmpty()) {
 			//get the next best node out of the set
@@ -43,10 +41,10 @@ public class AStar implements RouteFindingAlgorithm {
 			NodeWrap current = openSet.poll();
 			pVisitListener.onVisit(current.mNode);
 			if(current.mNode == pEnd) {
-				return cameFrom;
+				return Util.buildPath(cameFrom, pEnd);
 			}
 			//we are finished with the current node
-			closedSet.add(current);
+			closedSet.add(current.mNode);
 			//navigate through all neighbours
 			for(QuadNode<Position> neighbour : current.mNode.getNeighbours()) {
 				
@@ -93,7 +91,7 @@ public class AStar implements RouteFindingAlgorithm {
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	
-	public static class NodeWrap implements Comparable<NodeWrap> {
+	public static class NodeWrap {
 		
 		QuadNode<Position> mNode;
 		double mGScore;
@@ -103,13 +101,6 @@ public class AStar implements RouteFindingAlgorithm {
 			this.mNode = pNode;
 			this.mGScore = pGScore;
 			this.mHScore = pHScore;
-		}
-
-		@Override
-		public int compareTo(NodeWrap pOther) {
-			double own = this.mGScore + this.mHScore;
-			double other = pOther.mGScore + pOther.mHScore;
-			return (int) ((own - other) * 1000);
 		}
 		
 	}

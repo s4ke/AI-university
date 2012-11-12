@@ -1,6 +1,5 @@
 package de.hotware.uni.ai.ex3.path;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Queue;
 
@@ -21,24 +20,24 @@ public class Main {
 				}
 				
 		};
-		
+		//As we are really really lazy people, we reload the map all the time
 		System.out.println("------------------------------------");
 		System.out.println("testing with dfs: ");
-		QuadNodeMatrix<Position> matrix = MapParser.parseMap(new File("test.maze"));
+		QuadNodeMatrix<Position> matrix = MapParser.parseMap(Main.class.getClassLoader().getResource("test.maze"));
 		System.out.println(matrix);
 		RouteFindingAlgorithm algo = new DFS();
 		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
 		
 		System.out.println("------------------------------------");
 		System.out.println("Testing with greedy: ");
-		matrix = MapParser.parseMap(new File("test.maze"));
+		matrix = MapParser.parseMap(Main.class.getClassLoader().getResource("test.maze"));
 		System.out.println(matrix);
 		algo = new Greedy();
 		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
 		
 		System.out.println("------------------------------------");
 		System.out.println("testing with A*: ");
-		matrix = MapParser.parseMap(new File("test.maze"));
+		matrix = MapParser.parseMap(Main.class.getClassLoader().getResource("test.maze"));
 		System.out.println(matrix);
 		algo = new AStar();
 		printPath(algo.findRoute(matrix.getNorthNodes().get(13), matrix.getSouthNodes().get(7), matrix, listener));
