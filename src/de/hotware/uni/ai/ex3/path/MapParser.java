@@ -1,4 +1,4 @@
-package de.hotware.uni.ai.ex3;
+package de.hotware.uni.ai.ex3.path;
 
 import java.io.BufferedReader;
 import java.io.File;

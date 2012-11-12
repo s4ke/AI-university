@@ -18,7 +18,7 @@
  * TL;DR: As long as you clearly give me credit for this Software, you are free to use as you like, even in commercial software, but don't blame me
  *   if it breaks something.
  */
-package de.hotware.uni.ai.ex3;
+package de.hotware.uni.ai.ex3.path;
 
 public interface QuadNode<T> {
 	
