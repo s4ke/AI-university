@@ -65,7 +65,7 @@ public class IOImpl implements IO {
 	
 	public static void main(String[] pArgs) {
 		//Testing...
-		Unit unit = new UnitImpl(Unit.Type.BISHOP, new Point(2,2), true);
+		Unit unit = new UnitImpl(true, Unit.Type.BISHOP, new Point(2,2));
 		IO io = new IOImpl(true, System.out, System.in);
 		io.write(unit, new Point(2,3));
 	}

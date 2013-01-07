@@ -9,7 +9,7 @@ public class UnitImpl implements Unit {
 	protected Type mType;
 	protected boolean mIsOwnerWhite;
 	
-	public UnitImpl(Type pType, Point2D pPosition, boolean pIsOwnerWhite) {
+	public UnitImpl(boolean pIsOwnerWhite, Type pType, Point2D pPosition) {
 		this.mType = pType;
 		this.mPosition = pPosition;
 	}

@@ -11,7 +11,7 @@ public class BoardImpl implements Board {
 	protected List<Unit> mBlackUnits;
 	protected boolean mIsOwnerWhite;
 
-	public BoardImpl(List<Unit> pWhiteUnits, List<Unit> pBlackUnits, boolean pIsOwnerWhite) {
+	public BoardImpl(boolean pIsOwnerWhite, List<Unit> pWhiteUnits, List<Unit> pBlackUnits) {
 		this.mWhiteUnits = new ArrayList<>();
 		this.mBlackUnits = new ArrayList<>();
 		//TODO: more input checking if needed
@@ -52,33 +52,52 @@ public class BoardImpl implements Board {
 		ret = ownValue - otherValue;
 		//and now let the black king survive as long as possible
 		//FIXME: hard coded for faster implementation
-		Unit king = this.mBlackUnits.get(0);
-		List<Point2D> escapes = 
-				king.getType().
-					getReachedPositions(king.getPosition());
-		//find escapes that are not blocked
-		for(Unit unit : this.mWhiteUnits) {
-			for(Point2D pt : unit.getType().getReachedPositions(unit.getPosition())) {
-				escapes.remove(pt);
+		if(this.mBlackUnits.size() > 0) {
+			Unit king = this.mBlackUnits.get(0);
+			List<Point2D> escapes = 
+					king.getType().
+						getReachedPositions(king.getPosition());
+			//find escapes that are not blocked
+			for(Unit unit : this.mWhiteUnits) {
+				for(Point2D pt : unit.getType().getReachedPositions(unit.getPosition())) {
+					escapes.remove(pt);
+				}
 			}
-		}
-		int size = escapes.size();
-		if(size > 0) {
-			if(this.mIsOwnerWhite) {
-				ret -= size * 10;
+			int size = escapes.size();
+			if(size > 0) {
+				if(this.mIsOwnerWhite) {
+					ret -= size * 10;
+				} else {
+					ret -= size * 10;
+				}
 			} else {
-				ret -= size * 10;
-			}
-		} else {
-			if(this.mIsOwnerWhite) {
-				ret -= 1000;
-			} else {
-				ret += 1000;
+				if(this.mIsOwnerWhite) {
+					ret -= 1000;
+				} else {
+					ret += 1000;
+				}
 			}
 		}
 		return ret;
 	}
 	
+	@Override
+	public EndType end() {
+		if(this.mBlackUnits.size() == 0) {
+			return EndType.WHITE;
+		} else if(this.mWhiteUnits.size() == 0) {
+			return EndType.BLACK;
+		}
+		Unit king = this.mBlackUnits.get(0);
+		List<Point2D> escapes = 
+				king.getType().
+					getReachedPositions(king.getPosition());
+		if(escapes.size() == 0) {
+			return EndType.DRAW;
+		}
+		return EndType.RUNNING;
+	}
+		
 	@Override
 	public boolean isPositionAllowed(Unit pUnit, Point2D pPosition) {
 		boolean taken = false;
@@ -115,7 +134,7 @@ public class BoardImpl implements Board {
 		if(rem != null) {
 			enemyUnits.remove(rem);
 		}
-		BoardImpl ret = new BoardImpl(tmpWhite, tmpBlack, this.mIsOwnerWhite);
+		BoardImpl ret = new BoardImpl(this.mIsOwnerWhite, tmpWhite, tmpBlack);
 		return ret;
 	}
 

@@ -3,7 +3,6 @@ package de.hotware.uni.ai.chess;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-
 public interface Board {
 	
 	public List<Unit> getWhiteUnits();
@@ -17,5 +16,13 @@ public interface Board {
 	public double eval();
 
 	boolean isPositionAllowed(Unit pUnit, Point2D pPosition);
+	
+	public EndType end();
 
+	public static enum EndType {
+		RUNNING,
+		DRAW,
+		WHITE,
+		BLACK
+	}
 }
