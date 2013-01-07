@@ -11,50 +11,49 @@ import java.util.List;
 
 public class IOImpl implements IO {
 
-	protected InputStream mInputStream;
+	protected BufferedReader buf;
 	protected PrintStream mPrintStream;
 	protected boolean mIsOwnerWhite;
 
 	public IOImpl(boolean pIsOwnerWhite, PrintStream pPrintStream, InputStream pInputStream) {
 		this.mPrintStream = pPrintStream;
 		this.mIsOwnerWhite = pIsOwnerWhite;
+		this.buf = new BufferedReader(new InputStreamReader(pInputStream));
+		
 	}
 
 	@Override
 	public Board read(Board pBoard) throws IOException {
-		try(BufferedReader buf = new BufferedReader(
-				new InputStreamReader(this.mInputStream))) {
-			boolean done = false;
-			List<Unit> units = this.mIsOwnerWhite ? pBoard.getWhiteUnits() : pBoard.getBlackUnits();
-			Unit toMove = null;
-			int x = 0;
-			int y = 0;
-			while(!done) {
-				toMove = null;
-				String read = Character.toString((char) buf.read());
-				//check if the read char is one of the enemies units
-				for(Unit unit : units) {
-					if(unit.getType().getStringRepresentation().equals(read)) {
-						toMove = unit;
-					}
+		boolean done = false;
+		List<Unit> units = this.mIsOwnerWhite ? pBoard.getBlackUnits() : pBoard.getWhiteUnits();
+		Unit toMove = null;
+		int x = 0;
+		int y = 0;
+		while(!done) {
+			toMove = null;
+			String read = Character.toString((char) buf.read());
+			//check if the read char is one of the enemies units
+			for(Unit unit : units) {
+				if(unit.getType().getStringRepresentation().equals(read)) {
+					toMove = unit;
 				}
-				if(toMove != null) {
-					char ch = (char) buf.read();
-					if(ch >= 'a' && ch <= 'h') {
-						x = ch - 'a';
-						y = Integer.parseInt(Character.toString((char) buf.read()));
-						if(y < 1 || y > Constants.SIZE) {
-							x = -1;
-							y = -1;
-						} else {
-							done = true;
-						}
+			}
+			if(toMove != null) {
+				char ch = (char) buf.read();
+				if(ch >= 'a' && ch <= 'h') {
+					x = ch - 'a';
+					y = Integer.parseInt(Character.toString((char) buf.read()));
+					if(y < 1 || y > Constants.SIZE) {
+						x = -1;
+						y = -1;
+					} else {
+						done = true;
 					}
 				}
 			}
-			//y - 1 because of zero based internals
-			return pBoard.move(toMove, new Point(x, y - 1));
 		}
+		//y - 1 because of zero based internals
+		return pBoard.move(toMove, new Point(x, y - 1));
 	}
 
 	@Override

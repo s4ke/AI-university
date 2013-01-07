@@ -31,9 +31,17 @@ public interface Unit {
 				tmp.add(pt);
 				pt = new Point(x - 1, y);
 				tmp.add(pt);
+				pt = new Point(x + 1, y + 1);
+				tmp.add(pt);
 				pt = new Point(x, y + 1);
 				tmp.add(pt);
+				pt = new Point(x - 1, y + 1);
+				tmp.add(pt);
+				pt = new Point(x + 1, y - 1);
+				tmp.add(pt);
 				pt = new Point(x, y - 1);
+				tmp.add(pt);
+				pt = new Point(x - 1, y - 1);
 				tmp.add(pt);
 				for(Point2D point : tmp) {
 					if(inBounds(point)) {
@@ -52,19 +60,19 @@ public interface Unit {
 				int x = (int) pPosition.getX();
 				int y = (int) pPosition.getY();
 				for(int i = 0; i < Constants.SIZE; ++i) {
-					Point pt = new Point(x + i, y);
+					Point pt = new Point(x + i, y + i);
 					if(inBounds(pt)) {
 						ret.add(pt);
 					}
-					pt = new Point(x - i, y);
+					pt = new Point(x - i, y - i);
 					if(inBounds(pt)) {
 						ret.add(pt);
 					}
-					pt = new Point(x, y + i);
+					pt = new Point(x - i, y + i);
 					if(inBounds(pt)) {
 						ret.add(pt);
 					}
-					pt = new Point(x, y - i);
+					pt = new Point(x + i, y - i);
 					if(inBounds(pt)) {
 						ret.add(pt);
 					}

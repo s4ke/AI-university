@@ -32,12 +32,14 @@ public class Main {
 		Board board = new BoardImpl(white, whiteList, blackList);
 		int turn = white ? 1 : 2;
 		while(board.end() == EndType.RUNNING) {
-			if(turn % 2 == 1) {
+			if(turn++ % 2 == 1) {
 				Move move = ai.calculateNextMove(board);
 				board = board.move(move.mUnit, move.mPoint);
 				io.write(move.mUnit, move.mPoint);
+//				System.out.println(board);
 			} else {
 				board = io.read(board);
+//				System.out.println(board);
 			}
 		}
 		System.out.println(board.end());

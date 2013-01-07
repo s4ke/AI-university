@@ -55,7 +55,7 @@ public class BoardImpl implements Board {
 	@Override
 	public boolean isPositionAllowed(Unit pUnit, Point2D pPosition) {
 		boolean taken = false;
-		List<Unit> ownUnits = this.mIsOwnerWhite ? this.mWhiteUnits : this.mBlackUnits;
+		List<Unit> ownUnits = pUnit.isOwnerWhite() ? this.mWhiteUnits : this.mBlackUnits;
 		for(Unit unit : ownUnits) {
 			if(unit != pUnit && unit.getPosition().equals(pPosition)) {
 				taken = true;
@@ -72,7 +72,7 @@ public class BoardImpl implements Board {
 		//}
 		//firstly check if position isn't already in use
 		if(!this.isPositionAllowed(pUnit, pPosition)) {
-			throw new IllegalArgumentException("Position isn't free");
+			throw new IllegalArgumentException("Position isn't allowed");
 		}
 		List<Unit> tmpBlack = new ArrayList<Unit>(this.mBlackUnits);
 		List<Unit> tmpWhite = new ArrayList<Unit>(this.mWhiteUnits);

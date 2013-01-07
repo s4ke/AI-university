@@ -20,7 +20,7 @@ public class ChessMiniMaxAI implements AI {
 		}
 		//build the graph for minimax
 		Node root = new Node(pBoard);
-		root.initChildren(4, true, this.mIsOwnerWhite);
+		root.initChildren(5, true, this.mIsOwnerWhite);
 		
 		//get the next best node
 		Node bestChild = root.getNextBestNode();
@@ -32,9 +32,15 @@ public class ChessMiniMaxAI implements AI {
 		for(Unit unit : bestOwnUnits) {
 			if(!ownUnits.contains(unit)) {
 				if(!done) {
-					ret.mUnit = unit;
 					ret.mPoint = unit.getPosition();
-					done = true;
+					for(Unit un : ownUnits) {
+						if(!bestOwnUnits.contains(un)) {
+							if(!done) {
+								ret.mUnit = un;
+								done = true;
+							}
+						}
+					}
 				} else {
 					throw new AssertionError("boards differ in more than one Unit");
 				}
