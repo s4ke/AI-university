@@ -11,49 +11,50 @@ import java.util.List;
 
 public class IOImpl implements IO {
 
-	protected BufferedReader mBufferedReader;
+	protected InputStream mInputStream;
 	protected PrintStream mPrintStream;
 	protected boolean mIsOwnerWhite;
 
 	public IOImpl(boolean pIsOwnerWhite, PrintStream pPrintStream, InputStream pInputStream) {
 		this.mPrintStream = pPrintStream;
 		this.mIsOwnerWhite = pIsOwnerWhite;
-		this.mBufferedReader = new BufferedReader(
-				new InputStreamReader(System.in));
 	}
 
 	@Override
 	public Board read(Board pBoard) throws IOException {
-		boolean done = false;
-		List<Unit> units = this.mIsOwnerWhite ? pBoard.getWhiteUnits() : pBoard.getBlackUnits();
-		Unit toMove = null;
-		int x = 0;
-		int y = 0;
-		while(!done) {
-			toMove = null;
-			String read = Character.toString((char) this.mBufferedReader.read());
-			//check if the read char is one of the enemies units
-			for(Unit unit : units) {
-				if(unit.getType().getStringRepresentation().equals(read)) {
-					toMove = unit;
+		try(BufferedReader buf = new BufferedReader(
+				new InputStreamReader(this.mInputStream))) {
+			boolean done = false;
+			List<Unit> units = this.mIsOwnerWhite ? pBoard.getWhiteUnits() : pBoard.getBlackUnits();
+			Unit toMove = null;
+			int x = 0;
+			int y = 0;
+			while(!done) {
+				toMove = null;
+				String read = Character.toString((char) buf.read());
+				//check if the read char is one of the enemies units
+				for(Unit unit : units) {
+					if(unit.getType().getStringRepresentation().equals(read)) {
+						toMove = unit;
+					}
 				}
-			}
-			if(toMove != null) {
-				char ch = (char) this.mBufferedReader.read();
-				if(ch >= 'a' && ch <= 'h') {
-					x = ch - 'a';
-					y = Integer.parseInt(Character.toString((char) this.mBufferedReader.read()));
-					if(y < 1 || y > Constants.SIZE) {
-						x = -1;
-						y = -1;
-					} else {
-						done = true;
+				if(toMove != null) {
+					char ch = (char) buf.read();
+					if(ch >= 'a' && ch <= 'h') {
+						x = ch - 'a';
+						y = Integer.parseInt(Character.toString((char) buf.read()));
+						if(y < 1 || y > Constants.SIZE) {
+							x = -1;
+							y = -1;
+						} else {
+							done = true;
+						}
 					}
 				}
 			}
+			//y - 1 because of zero based internals
+			return pBoard.move(toMove, new Point(x, y - 1));
 		}
-		//y - 1 because of zero based internals
-		return pBoard.move(toMove, new Point(x, y - 1));
 	}
 
 	@Override
@@ -61,6 +62,7 @@ public class IOImpl implements IO {
 		this.mPrintStream.print(pUnit.getType().getStringRepresentation());
 		this.mPrintStream.print((char)(pPosition.getX() + 'a'));
 		this.mPrintStream.print((int)(pPosition.getY() + 1));
+		this.mPrintStream.flush();
 	}
 	
 	public static void main(String[] pArgs) {

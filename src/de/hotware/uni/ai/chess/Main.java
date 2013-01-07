@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hotware.uni.ai.chess.AI.Move;
 import de.hotware.uni.ai.chess.Board.EndType;
 
 
@@ -16,6 +17,7 @@ public class Main {
 			System.exit(-1);
 		}
 		boolean white = pArgs[0].equals("1");
+		AI ai = new ChessMiniMaxAI(white);
 		IO io = new IOImpl(white, System.out, System.in);
 		List<Unit> whiteList = new ArrayList<>();
 		Unit unit = new UnitImpl(true, Unit.Type.KING, new Point(2, 0));
@@ -31,7 +33,9 @@ public class Main {
 		int turn = white ? 1 : 2;
 		while(board.end() == EndType.RUNNING) {
 			if(turn % 2 == 1) {
-				//simulate own turn
+				Move move = ai.calculateNextMove(board);
+				board = board.move(move.mUnit, move.mPoint);
+				io.write(move.mUnit, move.mPoint);
 			} else {
 				board = io.read(board);
 			}

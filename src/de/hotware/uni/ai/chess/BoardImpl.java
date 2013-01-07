@@ -36,52 +36,6 @@ public class BoardImpl implements Board {
 	}
 
 	@Override
-	public double eval() {
-		double ret = 0;
-		//material evaluation function
-		double ownValue = 0;
-		List<Unit> own = this.mIsOwnerWhite ? this.mWhiteUnits : this.mBlackUnits;
-		for(Unit unit : own) {
-			ownValue += unit.getType().getWeight();
-		}
-		List<Unit> other = this.mIsOwnerWhite ? this.mBlackUnits : this.mWhiteUnits;
-		double otherValue = 0;
-		for(Unit unit : other) {
-			otherValue = unit.getType().getWeight();
-		}
-		ret = ownValue - otherValue;
-		//and now let the black king survive as long as possible
-		//FIXME: hard coded for faster implementation
-		if(this.mBlackUnits.size() > 0) {
-			Unit king = this.mBlackUnits.get(0);
-			List<Point2D> escapes = 
-					king.getType().
-						getReachedPositions(king.getPosition());
-			//find escapes that are not blocked
-			for(Unit unit : this.mWhiteUnits) {
-				for(Point2D pt : unit.getType().getReachedPositions(unit.getPosition())) {
-					escapes.remove(pt);
-				}
-			}
-			int size = escapes.size();
-			if(size > 0) {
-				if(this.mIsOwnerWhite) {
-					ret -= size * 10;
-				} else {
-					ret -= size * 10;
-				}
-			} else {
-				if(this.mIsOwnerWhite) {
-					ret -= 1000;
-				} else {
-					ret += 1000;
-				}
-			}
-		}
-		return ret;
-	}
-	
-	@Override
 	public EndType end() {
 		if(this.mBlackUnits.size() == 0) {
 			return EndType.WHITE;
@@ -103,12 +57,12 @@ public class BoardImpl implements Board {
 		boolean taken = false;
 		List<Unit> ownUnits = this.mIsOwnerWhite ? this.mWhiteUnits : this.mBlackUnits;
 		for(Unit unit : ownUnits) {
-			if(unit.getPosition().equals(pPosition)) {
+			if(unit != pUnit && unit.getPosition().equals(pPosition)) {
 				taken = true;
 			}
 		}
 		return !taken && pUnit.getType().
-				getReachedPositions(pPosition).contains(pPosition);
+				getReachedPositions(pUnit.getPosition()).contains(pPosition);
 	}
 
 	@Override
@@ -134,8 +88,25 @@ public class BoardImpl implements Board {
 		if(rem != null) {
 			enemyUnits.remove(rem);
 		}
+		Unit clone = pUnit.copy();
+		clone.setPosition(pPosition);
+		if(pUnit.isOwnerWhite()) {
+			tmpWhite.remove(pUnit);
+			tmpWhite.add(clone);
+		} else {
+			tmpBlack.remove(pUnit);
+			tmpBlack.add(clone);
+		}
 		BoardImpl ret = new BoardImpl(this.mIsOwnerWhite, tmpWhite, tmpBlack);
 		return ret;
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder().append("[ white: ")
+				.append(this.mWhiteUnits).append(", black: ")
+				.append(this.mBlackUnits).append(", isOwnerWhite: ")
+				.append(this.mIsOwnerWhite).append("]").toString();
 	}
 
 }

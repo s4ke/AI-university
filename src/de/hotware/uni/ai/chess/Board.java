@@ -12,8 +12,6 @@ public interface Board {
 	public boolean isOwnerWhite();
 	
 	public Board move(Unit pUnit, Point2D pPosition);
-	
-	public double eval();
 
 	boolean isPositionAllowed(Unit pUnit, Point2D pPosition);
 	

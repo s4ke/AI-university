@@ -16,6 +16,8 @@ public interface Unit {
 	
 	public boolean isOwnerWhite();
 	
+	public Unit copy();
+	
 	public enum Type {
 		KING(1000) {
 

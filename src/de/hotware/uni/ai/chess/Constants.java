@@ -8,5 +8,6 @@ public final class Constants {
 	}
 	
 	public static final int SIZE = 8;
+	public static final boolean DEBUG = false;
 
 }
