@@ -37,19 +37,54 @@ public class BoardImpl implements Board {
 
 	@Override
 	public EndType end() {
-		if(this.mBlackUnits.size() == 0) {
+		if(kingDead(this.mBlackUnits)) {
 			return EndType.WHITE;
-		} else if(this.mWhiteUnits.size() == 0) {
+		} else if(kingDead(this.mWhiteUnits)) {
 			return EndType.BLACK;
 		}
-		Unit king = this.mBlackUnits.get(0);
-		List<Point2D> escapes = 
-				king.getType().
-					getReachedPositions(king.getPosition());
-		if(escapes.size() == 0) {
+		if(noEscapesForKing(this.mBlackUnits, this.mWhiteUnits) ||
+				noEscapesForKing(this.mWhiteUnits, this.mBlackUnits)) {
 			return EndType.DRAW;
 		}
 		return EndType.RUNNING;
+	}
+	
+	private static final boolean noEscapesForKing(List<Unit> pUnits, List<Unit> enemyUnits) {
+		Unit king = null;
+		for(Unit unit : pUnits) {
+			if(unit.getType() == Unit.Type.KING) {
+				king = unit;
+				break;
+			}
+		}
+		List<Point2D> escapes = 
+				king.getType().
+					getReachedPositions(king.getPosition());
+		//find escapes that are not blocked
+		for(Unit unit : enemyUnits) {
+			for(Point2D pt : unit.getType().getReachedPositions(unit.getPosition())) {
+				escapes.remove(pt);
+			}
+		}
+		for(Unit unit : pUnits) {
+			if(unit != king) {
+				for(Point2D pt : unit.getType().getReachedPositions(unit.getPosition())) {
+					escapes.remove(pt);
+				}
+			}
+		}
+		return escapes.size() == 0;
+	}
+	
+	private static final boolean kingDead(List<Unit> pUnits) {
+		boolean kingDead = true;
+		for(Unit unit : pUnits) {
+			if(unit.getType() == Unit.Type.KING) {
+				kingDead = false;
+				break;
+			}
+		}
+		return kingDead;
 	}
 		
 	@Override

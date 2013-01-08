@@ -19,7 +19,7 @@ public interface Unit {
 	public Unit copy();
 	
 	public enum Type {
-		KING(1000) {
+		KING(10000) {
 
 			@Override
 			public List<Point2D> getReachedPositions(Point2D pPosition) {
